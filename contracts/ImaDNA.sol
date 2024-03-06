@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 contract ImaDNA {
   string[] private _accessoriesType = [
@@ -217,13 +217,13 @@ contract ImaDNA {
     );
   }
 
-  function _getAccesoriesType (uint8 _dna)  public view returns (string memory)
+  function getAccessoriesType (uint256 _dna)  public view returns (string memory)
   {
     uint8 dnaSection = _getDNASection(_dna, 0);
     return _accessoriesType[dnaSection % _accessoriesType.length];
   }
 
-  function _getClotheColor(uint8 _dna) public view returns (string memory) {
+  function getClotheColor(uint256 _dna) public view returns (string memory) {
     uint8 dnaSection = _getDNASection(_dna, 2);
     return _clotheColor[dnaSection % _clotheColor.length];
   }
