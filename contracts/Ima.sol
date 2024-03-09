@@ -4,10 +4,13 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "./ImaDNA.sol";
 
 contract Ima is ERC721, ERC721Enumerable, ImaDNA {
+    using Strings for uint256;
+
     uint256 private _counterId;
     uint256 public maxSupply;
     mapping(uint256 => uint256) public tokenDNA;
@@ -20,10 +23,10 @@ contract Ima is ERC721, ERC721Enumerable, ImaDNA {
     function mint() public {
         uint256 current = _counterId;
         require(current < maxSupply, "No Ima left");
-        _counterId++;
 
         tokenDNA[current] = deterministicPseudoRandomDNA(current, msg.sender);
         _safeMint(msg.sender, current);
+        _counterId+=1;
     }
 
     function _baseURI() 
@@ -108,9 +111,9 @@ contract Ima is ERC721, ERC721Enumerable, ImaDNA {
         string memory image = imageByDNA(dna);
 
         string memory jsonURI = Base64.encode(
-            abi.encode(
+            abi.encodePacked(
                 '{"name": "Ima #', 
-                tokenId, 
+                tokenId.toString(), 
                 '", "description": "Ima Marketplace", "image": "',
                 image,
                 '"}'
