@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const ima = await ethers.deployContract("Ima", []);
+  const ima = await ethers.deployContract("Ima", [10000]);
 
   await ima.waitForDeployment();
 
