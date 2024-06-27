@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("Ima Contract", function () {
-  const setup = async (maxSupply: number = 10000) => {
+  const setup = async (maxSupply: number = 1000) => {
     const [owner] = await ethers.getSigners();
     const contract = await ethers.deployContract("Ima", [maxSupply]);
     await contract.waitForDeployment();
@@ -36,9 +36,13 @@ describe("Ima Contract", function () {
 
     it("Has a minting limit", async function () {
       const maxSupply = 2;
-      const { contract } = await setup(maxSupply);
+      const { owner, contract } = await setup(maxSupply);
+      let nonce = await ethers.provider.getTransactionCount(owner.address);
 
-      await Promise.all([contract.mint(), contract.mint()]);
+      await Promise.all([
+        contract.mint({ nonce: nonce++ }),
+        contract.mint({ nonce: nonce++ }),
+      ]);
 
       await expect(contract.mint()).to.be.revertedWith("No Ima left");
     });
